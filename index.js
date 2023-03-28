@@ -2,6 +2,19 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const route = 10;
+const connection = require("./database/database");
+
+
+//========= CONEXÃO COM BD =========//
+connection
+    .authenticate()
+    .then(() =>{
+        console.log("Conexão feita com o banco de dados!");
+    })
+    .catch((error) =>{
+        console.log("Ocorreu um erro: " + error);
+    });
+
 
 app.set('view engine','ejs');
 app.use(express.static('public'));
