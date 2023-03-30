@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const route = 10;
 const connection = require("./database/database");
-
+const Ask = require("./database/Ask");
 
 //========= CONEXÃO COM BD =========//
 connection
@@ -36,8 +36,17 @@ app.get("/perguntar",(req,res) => {
 app.post("/salvarPergunta",(req,res) => {
     let titulo = req.body.titulo;
     let desc = req.body.desc;
-
-    res.send("<h3>Formulario Recebido</h3><p><b>Titulo: </b>" + titulo +"</p><p><b>Descrição: </b>" + desc +"</p>");
+    //O metodo create é o mesmo que INSERT INTO....
+    Ask.create({
+        title: titulo,
+        desc: desc
+    })
+    .then(() => {
+       res.redirect("/");
+    })
+    .catch((msgError) => {
+        console.log("Ocorreu um erro!");
+    });
 });
 
 
