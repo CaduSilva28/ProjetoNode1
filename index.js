@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const route = 10;
 const connection = require("./database/database");
-const Ask = require("./database/Ask");
+const Pergunta = require("./database/Pergunta");
 
 //========= CONEXÃO COM BD =========//
 connection
@@ -25,7 +25,14 @@ app.use(bodyParser.json());
 
 //========= Rotas =========//
 app.get("/",(req,res) => {
-    res.render("index");
+    //O findAll é equivalente ao SELECT * FROM ..
+    //O raw significa crú, ou seja, vai trazer apenas os dados e mais nada
+    Pergunta.findAll({raw:true}).then(perguntas => {
+        res.render("index",{
+            perguntas: perguntas
+        });
+    });
+   
 });
 
 app.get("/perguntar",(req,res) => {
@@ -37,7 +44,7 @@ app.post("/salvarPergunta",(req,res) => {
     let titulo = req.body.titulo;
     let desc = req.body.desc;
     //O metodo create é o mesmo que INSERT INTO....
-    Ask.create({
+    Pergunta.create({
         title: titulo,
         desc: desc
     })

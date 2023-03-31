@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const connection = require("./database");
 
-const Ask = connection.define('Ask',{
+const Pergunta = connection.define('Pergunta',{
     title:{
         type: Sequelize.STRING,
         allowNull: false
@@ -13,9 +13,9 @@ const Ask = connection.define('Ask',{
 });
 
 //O {force:false} vai sincronizar o que tem aqui com o BD. Ou seja, se no meu BD não há essa tabela, então ele cria
-Ask.sync({force:false})
+Pergunta.sync({force:false})
 .then(() =>{
 
 });
 
-module.exports = Ask;
+module.exports = Pergunta;
