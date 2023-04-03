@@ -4,6 +4,7 @@ const port = 2000;
 const bodyParser = require("body-parser");
 const connection = require("./database/database");
 const Pergunta = require("./database/Pergunta");
+const Resposta = require("./database/Resposta");
 
 //======= CONEXÃO COM BD =======//
 connection
@@ -73,6 +74,23 @@ app.get("/pergunta/:id",(req,res) => {
         }
    });
 });
+
+app.post("/resposta",(req,res) => {
+    let idPergunta = req.body.idPergunta;
+    let corpo = req.body.corpo;
+
+    Resposta.create({
+        idPergunta: idPergunta,
+        corpo: corpo 
+    })
+    .then(() => {
+        res.redirect("/pergunta/" + idPergunta);
+    })
+    .catch((msgError) => {
+        console.log("Ocorreu um erro!");
+    });
+});
+
 //======= SERVIDOR =======//
 app.listen(port,(msgError) => {
     if(msgError){

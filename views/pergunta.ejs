@@ -6,6 +6,15 @@
         <h3><%= pergunta.title %></h3>
         <p><%= pergunta.desc %></p>
         <hr>
+        <form method="POST" action="/resposta">
+            <h3>Responda</h3>
+            <label for="corpo">Resposta:</label>
+            <textarea class="form-control" id="corpo" name="corpo" placeholder="Digite sua resposta" required></textarea>
+            <br>
+            <input type="hidden" id="idPergunta" name="idPergunta" value="<%= pergunta.id %> ">
+            <button class="btn btn-success" type="reset">Limpar</button>
+            <button class="btn btn-primary" type="submit">Responder</button>
+        </form>
     </section>
 </body>
 <%-include('partials/footer.ejs') %>
