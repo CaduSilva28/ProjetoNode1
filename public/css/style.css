@@ -1,6 +1,9 @@
 body{
-    background-color: #98c4d8;
+    background-color: rgb(173, 216, 230);
 }
-#form-Question{
+#formulario-pergunta{
+    margin-top: 5vh;
+}
+#card-pergunta{
     margin-top: 5vh;
 }

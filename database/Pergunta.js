@@ -12,10 +12,9 @@ const Pergunta = connection.define('Pergunta',{
     }
 });
 
-//O {force:false} vai sincronizar o que tem aqui com o BD. Ou seja, se no meu BD não há essa tabela, então ele cria
-Pergunta.sync({force:false})
+Pergunta.sync({force: false})
 .then(() =>{
 
-});
+})
 
 module.exports = Pergunta;

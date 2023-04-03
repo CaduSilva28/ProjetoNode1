@@ -1,66 +1,82 @@
 const express = require("express");
 const app = express();
+const port = 2000;
 const bodyParser = require("body-parser");
-const route = 10;
 const connection = require("./database/database");
 const Pergunta = require("./database/Pergunta");
 
-//========= CONEXÃO COM BD =========//
+//======= CONEXÃO COM BD =======//
 connection
-    .authenticate()
-    .then(() =>{
-        console.log("Conexão feita com o banco de dados!");
-    })
-    .catch((error) =>{
-        console.log("Ocorreu um erro: " + error);
-    });
-
+.authenticate()
+.then(() => {
+    console.log("Conexão feita com BD");
+})   
+.catch((msgError) => {
+    console.log("Erro de conexão com BD: " + msgError);
+});
 
 app.set('view engine','ejs');
 app.use(express.static('public'));
 
-//========= bodyParser =========//
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//========= Rotas =========//
+//======= ROTAS =======//
 app.get("/",(req,res) => {
-    //O findAll é equivalente ao SELECT * FROM ..
-    //O raw significa crú, ou seja, vai trazer apenas os dados e mais nada
-    Pergunta.findAll({raw:true}).then(perguntas => {
+    Pergunta.findAll({
+        raw: true,
+        order:[
+            ['id','DESC']
+        ]
+    })
+    .then(perguntas => {
         res.render("index",{
             perguntas: perguntas
         });
     });
-   
 });
 
 app.get("/perguntar",(req,res) => {
-    res.render("toAsk");
+    res.render("perguntar");
 });
-
 
 app.post("/salvarPergunta",(req,res) => {
-    let titulo = req.body.titulo;
+    let title = req.body.title;
     let desc = req.body.desc;
-    //O metodo create é o mesmo que INSERT INTO....
+
     Pergunta.create({
-        title: titulo,
+        title: title,
         desc: desc
-    })
-    .then(() => {
+   })
+   .then(() => {
        res.redirect("/");
-    })
-    .catch((msgError) => {
-        console.log("Ocorreu um erro!");
-    });
+   })
+   .catch((msgError) => {
+        console.log("Ocorreu um erro ao salvar pergunta no BD");
+   })
 });
 
-
-//========= Servidor =========//
-app.listen(route,(error) => {
-    if(error){
-        console.log("Ocorreu um erro");
+app.get("/pergunta/:id",(req,res) => {
+    let id = req.params.id;
+    
+    Pergunta.findOne({
+        raw: true,
+        where: {id: id}
+    })
+   .then(pergunta => {
+        if(pergunta) {
+            res.render("pergunta",{
+                pergunta: pergunta
+            });
+        }else{
+            res.redirect("/");
+        }
+   });
+});
+//======= SERVIDOR =======//
+app.listen(port,(msgError) => {
+    if(msgError){
+        console.log("Erro ao criar servidor");
     }else{
         console.log("Servidor rodando");
     }
