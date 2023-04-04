@@ -63,11 +63,19 @@ app.get("/pergunta/:id",(req,res) => {
     Pergunta.findOne({
         raw: true,
         where: {id: id}
-    })
-   .then(pergunta => {
+    }).then(pergunta => {
         if(pergunta) {
-            res.render("pergunta",{
-                pergunta: pergunta
+            Resposta.findAll({
+                raw: true,
+                where: {idPergunta: pergunta.id},
+                order: [
+                    ['id','DESC']
+                ]
+            }).then(respostas => {
+                res.render("pergunta",{
+                    pergunta: pergunta,
+                    respostas: respostas
+                });
             });
         }else{
             res.redirect("/");
